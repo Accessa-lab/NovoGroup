@@ -32,15 +32,14 @@
         .hidden-view { display: none !important; }
         .flex-view { display: flex !important; }
         .auth-tab.active { border-bottom: 2px solid #1e40af; color: #1e40af; font-weight: 600; }
-        /* Modal styles */
         #modal-new-register.flex { display: flex !important; }
-        /* Scroll para modal */
         .modal-scroll { max-height: calc(90vh - 140px); overflow-y: auto; }
+        .loading { opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body class="text-gray-800 h-screen overflow-hidden">
 
-    <!-- ==================== AUTH VIEW ==================== -->
+    <!-- AUTH VIEW -->
     <div id="auth-view" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-novo-900 to-slate-800 p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
             <div class="p-6 bg-novo-800 text-white text-center">
@@ -50,8 +49,6 @@
                 <h1 class="text-xl font-bold">Novo Operativa</h1>
                 <p class="text-novo-100 text-sm">Plataforma Integral</p>
             </div>
-
-            <!-- Tabs -->
             <div class="flex border-b border-gray-200">
                 <button type="button" onclick="switchTab('email')" id="tab-email" class="flex-1 py-3 text-sm font-medium auth-tab active transition">
                     <i class="fa-solid fa-envelope mr-2"></i>Correo
@@ -60,15 +57,11 @@
                     <i class="fa-solid fa-id-card mr-2"></i>Documento
                 </button>
             </div>
-
             <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
-                <!-- Email Field -->
                 <div id="field-email">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
                     <input type="email" id="input-email" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-novo-600" placeholder="Camilo@novo.com">
                 </div>
-
-                <!-- Document Fields -->
                 <div id="field-document" class="hidden space-y-3">
                     <div class="grid grid-cols-3 gap-3">
                         <div>
@@ -85,22 +78,14 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Password -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
                     <input type="password" id="input-password" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg" placeholder="••••••••">
                 </div>
-
-                <!-- Error Message -->
                 <div id="error-msg" class="hidden text-red-600 text-sm bg-red-50 border border-red-100 p-3 rounded-lg"></div>
-
-                <!-- Login Button -->
                 <button type="submit" id="btn-login" class="w-full bg-novo-600 hover:bg-novo-700 text-white font-semibold py-2.5 rounded-lg transition flex items-center justify-center">
                     <i class="fa-solid fa-right-to-bracket mr-2"></i>Ingresar
                 </button>
-
-                <!-- Demo Hint -->
                 <p class="text-center text-xs text-gray-400 pt-2">
                     <strong>Demo:</strong><br>
                     📧 Camilo@novo.com / 123456<br>
@@ -110,9 +95,8 @@
         </div>
     </div>
 
-    <!-- ==================== DASHBOARD VIEW ==================== -->
+    <!-- DASHBOARD VIEW -->
     <div id="dashboard-view" class="hidden-view h-screen flex overflow-hidden">
-        
         <!-- Sidebar -->
         <aside class="w-64 bg-novo-900 text-gray-300 flex flex-col hidden md:flex shadow-xl">
             <div class="p-5 flex items-center gap-3 border-b border-novo-700">
@@ -168,7 +152,7 @@
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2 text-xs bg-gray-50 px-3 py-1.5 rounded-full">
                         <span class="sync-dot online"></span>
-                        <span>Conectado</span>
+                        <span id="sync-status">Sincronizando...</span>
                     </div>
                     <button onclick="logout()" class="p-2 text-gray-400 hover:text-danger transition" title="Cerrar Sesión">
                         <i class="fa-solid fa-right-from-bracket text-lg"></i>
@@ -179,9 +163,8 @@
             <!-- Content Area -->
             <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
                 
-                <!-- ===== SECTION: DASHBOARD ===== -->
+                <!-- DASHBOARD SECTION -->
                 <section id="section-dashboard" class="fade-in space-y-6">
-                    <!-- KPIs -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                             <p class="text-sm text-gray-500">Empresas Activas</p>
@@ -189,23 +172,24 @@
                             <p class="text-xs text-success mt-2"><i class="fa-solid fa-arrow-up"></i> +2 este mes</p>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <p class="text-sm text-gray-500">Personal Disponible</p>
-                            <h3 class="text-3xl font-bold text-gray-800">3,456</h3>
-                            <p class="text-xs text-gray-400 mt-2">83% Aprobado</p>
+                            <p class="text-sm text-gray-500">Personal Registrado</p>
+                            <h3 id="total-people" class="text-3xl font-bold text-gray-800">0</h3>
+                            <p class="text-xs text-gray-400 mt-2">En tiempo real</p>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <p class="text-sm text-gray-500">Eventos este mes</p>
-                            <h3 class="text-3xl font-bold text-gray-800">45</h3>
-                            <p class="text-xs text-warning mt-2"><i class="fa-solid fa-clock"></i> 12 en curso</p>
+                            <p class="text-sm text-gray-500">Aprobados</p>
+                            <h3 id="approved-people" class="text-3xl font-bold text-success">0</h3>
+                            <p class="text-xs text-gray-400 mt-2">Listos para operar</p>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <p class="text-sm text-gray-500">Sync Pendiente</p>
-                            <h3 class="text-3xl font-bold text-gray-800">23</h3>
-                            <p class="text-xs text-success mt-2"><i class="fa-solid fa-check"></i> Consolidando</p>
+                            <p class="text-sm text-gray-500">Sincronización</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="w-2 h-2 bg-success rounded-full animate-pulse"></span>
+                                <p class="text-xs text-gray-500">En tiempo real</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Charts -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                             <h4 class="font-bold mb-4">Operación Mensual</h4>
@@ -217,7 +201,6 @@
                         </div>
                     </div>
 
-                    <!-- Alerts & Audit -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                             <h4 class="font-bold mb-4">Alertas Críticas</h4>
@@ -247,13 +230,13 @@
                     </div>
                 </section>
 
-                <!-- ===== SECTION: TALENTO HUMANO ===== -->
+                <!-- TALENTO HUMANO SECTION -->
                 <section id="section-talento" class="hidden fade-in space-y-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
                             <div>
                                 <h3 class="text-lg font-bold text-gray-800">Base Maestra de Personal</h3>
-                                <p class="text-sm text-gray-500">Gestión de expedientes y perfiles</p>
+                                <p class="text-sm text-gray-500">Gestión de expedientes y perfiles - Sincronización en tiempo real</p>
                             </div>
                             <div class="flex gap-2">
                                 <button type="button" onclick="openNewRegisterModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
@@ -262,18 +245,16 @@
                             </div>
                         </div>
 
-                        <!-- Filters -->
                         <div class="flex gap-3 mb-4 flex-wrap">
                             <input type="text" id="search-people" onkeyup="filterPeopleTable()" placeholder="Buscar por documento o nombre..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm w-64">
                             <select id="filter-status" onchange="filterPeopleTable()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
                                 <option value="">Todos los estados</option>
-                                <option value="Activo">Activo</option>
+                                <option value="Aprobado">Aprobado</option>
                                 <option value="Pendiente">Pendiente</option>
                                 <option value="Restringido">Restringido</option>
                             </select>
                         </div>
 
-                        <!-- People Table -->
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm">
                                 <thead class="text-xs text-gray-500 uppercase bg-gray-50">
@@ -287,7 +268,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="people-table-body" class="divide-y">
-                                    <!-- Rows will be loaded by JavaScript -->
+                                    <tr><td colspan="6" class="px-4 py-8 text-center text-gray-500"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Cargando datos...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -295,33 +276,16 @@
                     </div>
                 </section>
 
-                <!-- ===== SECTION: CONVOCATORIAS ===== -->
+                <!-- CONVOCATORIAS SECTION -->
                 <section id="section-convocatorias" class="hidden fade-in space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm"><h4 class="text-sm font-bold text-gray-500 uppercase">Convocatorias Activas</h4><p class="text-3xl font-bold text-novo-600 mt-2">8</p></div>
                         <div class="bg-white p-5 rounded-xl shadow-sm"><h4 class="text-sm font-bold text-gray-500 uppercase">Postulaciones</h4><p class="text-3xl font-bold text-purple-600 mt-2">456</p></div>
                         <div class="bg-white p-5 rounded-xl shadow-sm"><h4 class="text-sm font-bold text-gray-500 uppercase">Aprobación</h4><p class="text-3xl font-bold text-success mt-2">62%</p></div>
                     </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm">
-                        <h3 class="text-lg font-bold mb-4">Convocatorias Activas</h3>
-                        <div class="space-y-3">
-                            <div class="border p-4 rounded-lg hover:shadow-md transition">
-                                <div class="flex justify-between">
-                                    <div><h4 class="font-bold">Festival de Verano 2026</h4><p class="text-sm text-gray-500">Cartagena | 15-17 Mayo</p></div>
-                                    <span class="bg-green-100 text-success px-2 py-1 rounded text-xs font-bold">Abierta</span>
-                                </div>
-                                <div class="mt-3 grid grid-cols-4 gap-2 text-center text-xs">
-                                    <div class="bg-gray-50 p-2 rounded"><p class="text-gray-500">Cupos</p><p class="font-bold">120</p></div>
-                                    <div class="bg-gray-50 p-2 rounded"><p class="text-gray-500">Postulados</p><p class="font-bold">145</p></div>
-                                    <div class="bg-gray-50 p-2 rounded"><p class="text-gray-500">Aprobados</p><p class="font-bold text-success">85</p></div>
-                                    <div class="bg-gray-50 p-2 rounded"><p class="text-gray-500">Progreso</p><p class="font-bold text-novo-600">70%</p></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </section>
 
-                <!-- ===== SECTION: EVENTOS ===== -->
+                <!-- EVENTOS SECTION -->
                 <section id="section-eventos" class="hidden fade-in space-y-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm">
                         <h3 class="text-lg font-bold mb-4">Monitor Operativo de Eventos</h3>
@@ -332,14 +296,13 @@
                                 </thead>
                                 <tbody class="divide-y">
                                     <tr><td class="px-4 py-3 font-medium">Festival de Verano</td><td class="px-4 py-3">15-17 May</td><td class="px-4 py-3"><span class="bg-green-100 text-success px-2 py-1 rounded text-xs">En Curso</span></td><td class="px-4 py-3">85%</td><td class="px-4 py-3"><span class="bg-red-100 text-danger px-2 py-1 rounded text-xs">3</span></td></tr>
-                                    <tr><td class="px-4 py-3 font-medium">Conferencia Tech</td><td class="px-4 py-3">20 May</td><td class="px-4 py-3"><span class="bg-blue-100 text-novo-600 px-2 py-1 rounded text-xs">Programado</span></td><td class="px-4 py-3">-</td><td class="px-4 py-3">0</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </section>
 
-                <!-- ===== SECTION: INVENTARIO ===== -->
+                <!-- INVENTARIO SECTION -->
                 <section id="section-inventario" class="hidden fade-in space-y-6">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-white p-4 rounded-xl shadow-sm text-center"><p class="text-2xl font-bold">5,678</p><p class="text-xs text-gray-500">Total Elementos</p></div>
@@ -347,29 +310,15 @@
                         <div class="bg-white p-4 rounded-xl shadow-sm text-center"><p class="text-2xl font-bold text-warning">89</p><p class="text-xs text-gray-500">Pendientes Dev.</p></div>
                         <div class="bg-white p-4 rounded-xl shadow-sm text-center"><p class="text-2xl font-bold text-danger">12</p><p class="text-xs text-gray-500">Bajas</p></div>
                     </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm">
-                        <h3 class="text-lg font-bold mb-4">Movimientos Recientes</h3>
-                        <table class="w-full text-sm">
-                            <thead class="text-xs text-gray-500 uppercase bg-gray-50">
-                                <tr><th class="px-4 py-2 text-left">Fecha</th><th class="px-4 py-2 text-left">Elemento</th><th class="px-4 py-2 text-left">Movimiento</th><th class="px-4 py-2 text-left">Custodia</th></tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                <tr><td class="px-4 py-2 text-xs">14/05 09:30</td><td class="px-4 py-2">Radio Motorola</td><td class="px-4 py-2"><span class="bg-blue-100 text-novo-600 px-2 py-1 rounded text-xs">Salida</span></td><td class="px-4 py-2">Rock Fest</td></tr>
-                                <tr><td class="px-4 py-2 text-xs">14/05 08:15</td><td class="px-4 py-2">Chaleco Seguridad</td><td class="px-4 py-2"><span class="bg-green-100 text-success px-2 py-1 rounded text-xs">Devolución</span></td><td class="px-4 py-2">Bodega Central</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </section>
 
-                <!-- ===== SECTION: CONFIGURACION ===== -->
+                <!-- CONFIGURACION SECTION -->
                 <section id="section-configuracion" class="hidden fade-in space-y-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm">
                         <h3 class="text-lg font-bold mb-4">Gobierno y Configuración</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="p-4 border rounded-lg"><h4 class="font-bold"><i class="fa-solid fa-building mr-2 text-novo-600"></i>Empresas</h4><p class="text-sm text-gray-500 my-2">Gestionar empresas cliente</p><button class="bg-novo-50 text-novo-600 px-3 py-1.5 rounded text-sm">Administrar</button></div>
                             <div class="p-4 border rounded-lg"><h4 class="font-bold"><i class="fa-solid fa-user-shield mr-2 text-novo-600"></i>Roles</h4><p class="text-sm text-gray-500 my-2">Configurar permisos</p><button class="bg-novo-50 text-novo-600 px-3 py-1.5 rounded text-sm">Configurar</button></div>
-                            <div class="p-4 border rounded-lg"><h4 class="font-bold"><i class="fa-solid fa-database mr-2 text-novo-600"></i>Auditoría</h4><p class="text-sm text-gray-500 my-2">Bitácora de acciones</p><button class="bg-novo-50 text-novo-600 px-3 py-1.5 rounded text-sm">Revisar</button></div>
-                            <div class="p-4 border rounded-lg"><h4 class="font-bold"><i class="fa-solid fa-list mr-2 text-novo-600"></i>Catálogos</h4><p class="text-sm text-gray-500 my-2">Perfiles, ciudades, tipos</p><button class="bg-novo-50 text-novo-600 px-3 py-1.5 rounded text-sm">Editar</button></div>
                         </div>
                     </div>
                 </section>
@@ -378,13 +327,12 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL: NUEVO REGISTRO ==================== -->
+    <!-- MODAL: NUEVO/EDITAR REGISTRO -->
     <div id="modal-new-register" class="hidden-view fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <!-- Header -->
             <div class="p-5 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white rounded-t-2xl z-10">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800">Nuevo Registro de Personal</h3>
+                    <h3 id="modal-title" class="text-lg font-bold text-gray-800">Nuevo Registro de Personal</h3>
                     <p class="text-sm text-gray-500">Núcleo 4: Registro y actualización de expediente</p>
                 </div>
                 <button type="button" onclick="closeNewRegisterModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg">
@@ -392,17 +340,12 @@
                 </button>
             </div>
 
-            <!-- Form Scrollable -->
-            <form onsubmit="handleNewRegister(event)" class="p-5 space-y-4 modal-scroll">
-                <!-- Info Box -->
+            <form onsubmit="handleFormSubmit(event)" class="p-5 space-y-4 modal-scroll">
+                <input type="hidden" id="edit-id">
                 <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p class="text-sm text-blue-800">
-                        <i class="fa-solid fa-circle-info mr-2"></i>
-                        Registro nuevo: Se creará un expediente maestro con matriz de perfiles.
-                    </p>
+                    <p class="text-sm text-blue-800"><i class="fa-solid fa-circle-info mr-2"></i>Registro nuevo: Se creará un expediente maestro con matriz de perfiles.</p>
                 </div>
 
-                <!-- Document -->
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tipo *</label>
@@ -419,7 +362,6 @@
                     </div>
                 </div>
 
-                <!-- Names -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nombres *</label>
@@ -431,7 +373,6 @@
                     </div>
                 </div>
 
-                <!-- Contact -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Celular/WhatsApp *</label>
@@ -443,7 +384,6 @@
                     </div>
                 </div>
 
-                <!-- City -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad de residencia *</label>
                     <select id="reg-city" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-novo-600">
@@ -457,7 +397,6 @@
                     </select>
                 </div>
 
-                <!-- Profiles -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Perfiles a los que desea aplicar *</label>
                     <div class="grid grid-cols-2 gap-2">
@@ -480,7 +419,15 @@
                     </div>
                 </div>
 
-                <!-- Consent -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Estado *</label>
+                    <select id="reg-status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-novo-600">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aprobado">Aprobado</option>
+                        <option value="Restringido">Restringido</option>
+                    </select>
+                </div>
+
                 <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg">
                     <label class="flex items-start gap-2 cursor-pointer">
                         <input type="checkbox" id="reg-consent" required class="mt-1 rounded text-novo-600">
@@ -491,77 +438,67 @@
                     </label>
                 </div>
 
-                <!-- Messages -->
                 <div id="reg-error" class="hidden text-red-600 text-sm bg-red-50 border border-red-100 p-3 rounded-lg"></div>
                 <div id="reg-success" class="hidden text-green-600 text-sm bg-green-50 border border-green-100 p-3 rounded-lg"></div>
 
-                <!-- Actions -->
                 <div class="flex justify-end gap-3 pt-2 border-t border-gray-100 sticky bottom-0 bg-white py-3">
-                    <button type="button" onclick="closeNewRegisterModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                        Cancelar
-                    </button>
+                    <button type="button" onclick="closeNewRegisterModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">Cancelar</button>
                     <button type="submit" id="btn-reg-submit" class="px-4 py-2 bg-novo-600 hover:bg-novo-700 text-white rounded-lg font-medium transition flex items-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> Enviar Registro
+                        <i class="fa-solid fa-paper-plane"></i> <span id="btn-submit-text">Enviar Registro</span>
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ==================== JAVASCRIPT ==================== -->
-    <script>
-        // === CREDENCIALES CONFIGURADAS ===
-        const VALID_CREDENTIALS = {
-            email: { user: 'camilo@novo.com', pass: '123456' },
-            document: { type: 'CC', num: '1000376905', pass: '123456' }
+    <!-- FIREBASE + LOGIC -->
+    <script type="module">
+        // 🔥 IMPORTS DE FIREBASE
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // 🔑 CONFIGURACIÓN DE FIREBASE - REEMPLAZA CON TUS DATOS
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtbHv3S0ZfwxjDqyy3wgKd4_QQ8CZWaks",
+            authDomain: "sincronizacion-plataforma-novo.firebaseapp.com",
+            projectId: "sincronizacion-plataforma-novo",
+            storageBucket: "sincronizacion-plataforma-novo.appspot.com",
+            messagingSenderId: "801067193336",
+            appId: "1:801067193336:web:fdc7ca2bccdabee53fc0d",
+            measurementId: "G-B91KMJX914"
         };
 
-        // === DATOS INICIALES DE PERSONAL (Ejemplo) ===
-        const INITIAL_PEOPLE = [
-            { id: 1, docType: 'CC', docNum: '1000376905', names: 'Camilo', surnames: 'Administrador', phone: '3001234567', email: 'camilo@novo.com', city: 'Bogotá', profiles: ['Coordinador'], status: 'Activo', createdAt: new Date().toISOString() },
-            { id: 2, docType: 'CC', docNum: '1029384756', names: 'Carlos', surnames: 'Martínez', phone: '3109876543', email: 'carlos@email.com', city: 'Medellín', profiles: ['Coordinador', 'Técnico'], status: 'Activo', createdAt: new Date().toISOString() },
-            { id: 3, docType: 'CC', docNum: '1928374650', names: 'Jorge', surnames: 'Ruiz', phone: '3205554433', email: 'jorge@email.com', city: 'Cali', profiles: ['Seguridad'], status: 'Pendiente', createdAt: new Date().toISOString() }
-        ];
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Variables globales
+        let peopleData = [];
+        let unsubscribe = null;
+        let chartsInitialized = false;
 
         // === AUTH FUNCTIONS ===
-        function switchTab(method) {
+        window.switchTab = (method) => {
             document.getElementById('tab-email').classList.toggle('active', method === 'email');
             document.getElementById('tab-document').classList.toggle('active', method === 'document');
             document.getElementById('field-email').classList.toggle('hidden', method !== 'email');
             document.getElementById('field-document').classList.toggle('hidden', method === 'email');
-        }
+        };
 
-        function showError(msg) {
-            const el = document.getElementById('error-msg');
-            el.textContent = msg;
-            el.classList.remove('hidden');
-        }
-
-        function hideError() {
-            document.getElementById('error-msg').classList.add('hidden');
-        }
-
-        function handleLogin(e) {
+        window.handleLogin = (e) => {
             e.preventDefault();
-            hideError();
-            
+            const errorMsg = document.getElementById('error-msg');
             const isEmailMode = !document.getElementById('field-email').classList.contains('hidden');
             const password = document.getElementById('input-password').value;
-            
-            let valid = false;
-            
-            if (isEmailMode) {
-                const email = document.getElementById('input-email').value.trim().toLowerCase();
-                valid = (email === VALID_CREDENTIALS.email.user && password === VALID_CREDENTIALS.email.pass);
-            } else {
-                const type = document.getElementById('input-doc-type').value;
-                const num = document.getElementById('input-doc-num').value.trim();
-                valid = (type === VALID_CREDENTIALS.document.type && 
-                        num === VALID_CREDENTIALS.document.num && 
-                        password === VALID_CREDENTIALS.document.pass);
-            }
-            
-            if (valid) {
+            const email = document.getElementById('input-email').value.trim().toLowerCase();
+            const docType = document.getElementById('input-doc-type').value;
+            const docNum = document.getElementById('input-doc-num').value.trim();
+
+            const validEmail = (email === 'camilo@novo.com' && password === '123456');
+            const validDoc = (docType === 'CC' && docNum === '1000376905' && password === '123456');
+
+            if (validEmail || validDoc) {
+                errorMsg.classList.add('hidden');
                 sessionStorage.setItem('novo_user', JSON.stringify({
                     name: 'Camilo',
                     role: 'Administrador',
@@ -569,9 +506,10 @@
                 }));
                 enterDashboard();
             } else {
-                showError('Credenciales inválidas. Verifica: Camilo@novo.com / 123456 o CC:1000376905 / 123456');
+                errorMsg.textContent = 'Credenciales inválidas. Usa: Camilo@novo.com / 123456 o CC:1000376905 / 123456';
+                errorMsg.classList.remove('hidden');
             }
-        }
+        };
 
         function enterDashboard() {
             document.getElementById('auth-view').classList.add('hidden-view');
@@ -586,23 +524,22 @@
             }
             
             initCharts();
-            loadPeopleInTable(); // Cargar tabla de personal al entrar
+            startRealtimeSync();
         }
 
-        function logout() {
+        window.logout = () => {
+            if (unsubscribe) unsubscribe();
             sessionStorage.removeItem('novo_user');
             location.reload();
-        }
+        };
 
-        function checkSession() {
+        window.checkSession = () => {
             const saved = sessionStorage.getItem('novo_user');
-            if (saved) {
-                enterDashboard();
-            }
-        }
+            if (saved) enterDashboard();
+        };
 
         // === DASHBOARD NAVIGATION ===
-        function showSection(id) {
+        window.showSection = (id) => {
             ['dashboard', 'talento', 'convocatorias', 'eventos', 'inventario', 'configuracion'].forEach(s => {
                 document.getElementById('section-' + s).classList.add('hidden');
                 document.getElementById('nav-' + s).classList.remove('active');
@@ -620,63 +557,49 @@
             };
             document.getElementById('page-title').textContent = titles[id];
             
-            if (id === 'talento') loadPeopleInTable();
-        }
+            if (id === 'talento') renderPeopleTable();
+        };
 
-        function toggleSidebar() {
+        window.toggleSidebar = () => {
             document.querySelector('aside').classList.toggle('hidden');
-        }
+        };
 
-        // === CHARTS ===
-        function initCharts() {
-            const ctx1 = document.getElementById('chartOps');
-            if (ctx1 && !ctx1.chart) {
-                ctx1.chart = new Chart(ctx1.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['Ene','Feb','Mar','Abr','May','Jun'],
-                        datasets: [
-                            { label: 'Eventos', data: [12,19,3,5,2,3], backgroundColor: '#1e40af' },
-                            { label: 'Personal', data: [240,350,150,220,450,500], backgroundColor: '#10b981' }
-                        ]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-                });
-            }
+        // === FIREBASE REAL-TIME SYNC ===
+        function startRealtimeSync() {
+            const peopleCollection = collection(db, "people");
+            const q = query(peopleCollection, orderBy("createdAt", "desc"));
             
-            const ctx2 = document.getElementById('chartStatus');
-            if (ctx2 && !ctx2.chart) {
-                ctx2.chart = new Chart(ctx2.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Aprobado','Pendiente','Vencido'],
-                        datasets: [{ data: [78, 15, 7], backgroundColor: ['#10b981','#f59e0b','#ef4444'] }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '70%' }
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                peopleData = [];
+                snapshot.forEach(doc => {
+                    peopleData.push({ id: doc.id, ...doc.data() });
                 });
-            }
+                
+                renderPeopleTable();
+                updateKPIs();
+                updateSyncStatus('Sincronizado');
+            }, (error) => {
+                console.error("Error de sincronización:", error);
+                updateSyncStatus('Error de conexión');
+            });
         }
 
-        // === PEOPLE TABLE FUNCTIONS ===
-        function getPeopleData() {
-            const stored = localStorage.getItem('novo_people');
-            if (stored) {
-                const custom = JSON.parse(stored);
-                return [...INITIAL_PEOPLE, ...custom];
-            }
-            return INITIAL_PEOPLE;
+        function updateSyncStatus(status) {
+            const el = document.getElementById('sync-status');
+            if (el) el.textContent = status;
         }
 
-        function loadPeopleInTable() {
-            const people = getPeopleData();
+        function renderPeopleTable() {
             const tbody = document.getElementById('people-table-body');
             const noResults = document.getElementById('no-results');
             const search = document.getElementById('search-people')?.value.toLowerCase() || '';
             const statusFilter = document.getElementById('filter-status')?.value || '';
             
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
-            const filtered = people.filter(p => {
+            const filtered = peopleData.filter(p => {
                 const fullName = `${p.names} ${p.surnames}`.toLowerCase();
                 const doc = `${p.docType}:${p.docNum}`.toLowerCase();
                 const matchSearch = fullName.includes(search) || doc.includes(search);
@@ -685,60 +608,119 @@
             });
             
             if (filtered.length === 0) {
-                noResults.classList.remove('hidden');
+                if (noResults) noResults.classList.remove('hidden');
+                tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-500">No se encontraron registros</td></tr>';
                 return;
             }
-            noResults.classList.add('hidden');
+            if (noResults) noResults.classList.add('hidden');
             
             filtered.forEach(person => {
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50';
-                const statusColor = person.status === 'Activo' ? 'bg-green-100 text-success' : person.status === 'Pendiente' ? 'bg-yellow-100 text-warning' : 'bg-red-100 text-danger';
+                row.className = 'hover:bg-gray-50 border-b';
+                const statusColor = person.status === 'Aprobado' ? 'bg-green-100 text-success' : 
+                                   person.status === 'Restringido' ? 'bg-red-100 text-danger' : 'bg-yellow-100 text-warning';
                 row.innerHTML = `
                     <td class="px-4 py-3 font-mono text-xs">${person.docType}:${person.docNum}</td>
                     <td class="px-4 py-3 font-medium">${person.names} ${person.surnames}</td>
-                    <td class="px-4 py-3 text-xs">${person.city}</td>
-                    <td class="px-4 py-3 text-xs">${person.profiles.join(', ')}</td>
+                    <td class="px-4 py-3 text-xs">${person.city || '-'}</td>
+                    <td class="px-4 py-3 text-xs">${person.profiles?.join(', ') || '-'}</td>
                     <td class="px-4 py-3"><span class="${statusColor} px-2 py-1 rounded text-xs font-bold">${person.status}</span></td>
-                    <td class="px-4 py-3"><button class="text-novo-600 hover:underline text-xs" onclick="viewPerson('${person.docNum}')">Ver</button></td>
+                    <td class="px-4 py-3 space-x-2">
+                        <button onclick="window.editPerson('${person.id}')" class="text-blue-600 hover:underline text-xs font-medium">Editar</button>
+                        <button onclick="window.changeStatus('${person.id}','Aprobado')" class="text-green-600 hover:underline text-xs font-medium">Aprobar</button>
+                        <button onclick="window.changeStatus('${person.id}','Restringido')" class="text-red-600 hover:underline text-xs font-medium">Restringir</button>
+                        <button onclick="window.deletePerson('${person.id}')" class="text-gray-500 hover:text-danger text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        function filterPeopleTable() {
-            loadPeopleInTable();
+        function updateKPIs() {
+            const totalEl = document.getElementById('total-people');
+            const approvedEl = document.getElementById('approved-people');
+            if (totalEl) totalEl.textContent = peopleData.length;
+            if (approvedEl) approvedEl.textContent = peopleData.filter(p => p.status === 'Aprobado').length;
         }
 
-        function viewPerson(docNum) {
-            alert(`Ver expediente: ${docNum}\n\nEn producción, aquí se abriría el detalle completo del expediente con matriz de perfiles, documentos y historial.`);
-        }
+        window.filterPeopleTable = () => {
+            renderPeopleTable();
+        };
 
-        // === MODAL: NUEVO REGISTRO ===
-        function openNewRegisterModal() {
+        // === CRUD OPERATIONS ===
+        window.editPerson = (id) => {
+            const person = peopleData.find(p => p.id === id);
+            if (!person) return;
+            
+            document.getElementById('edit-id').value = id;
+            document.getElementById('reg-doc-type').value = person.docType;
+            document.getElementById('reg-doc-num').value = person.docNum;
+            document.getElementById('reg-names').value = person.names;
+            document.getElementById('reg-surnames').value = person.surnames;
+            document.getElementById('reg-phone').value = person.phone;
+            document.getElementById('reg-email').value = person.email || '';
+            document.getElementById('reg-city').value = person.city || '';
+            document.getElementById('reg-status').value = person.status;
+            
+            // Marcar checkboxes de perfiles
+            document.querySelectorAll('input[name="reg-profiles"]').forEach(cb => {
+                cb.checked = person.profiles?.includes(cb.value) || false;
+            });
+            
+            document.getElementById('modal-title').textContent = 'Editar Registro';
+            document.getElementById('btn-submit-text').textContent = 'Actualizar';
+            openNewRegisterModal();
+        };
+
+        window.changeStatus = async (id, newStatus) => {
+            if (!confirm(`¿Cambiar estado a "${newStatus}"? Esta acción se sincronizará en todos los dispositivos.`)) return;
+            
+            try {
+                await updateDoc(doc(db, "people", id), { 
+                    status: newStatus, 
+                    updatedAt: serverTimestamp() 
+                });
+            } catch (e) {
+                alert('Error al actualizar: ' + e.message);
+            }
+        };
+
+        window.deletePerson = async (id) => {
+            if (!confirm('¿Eliminar registro permanentemente? Esta acción no se puede deshacer.')) return;
+            
+            try {
+                await deleteDoc(doc(db, "people", id));
+            } catch (e) {
+                alert('Error al eliminar: ' + e.message);
+            }
+        };
+
+        window.openNewRegisterModal = () => {
             document.getElementById('modal-new-register').classList.remove('hidden-view');
             document.getElementById('modal-new-register').classList.add('flex');
             document.getElementById('reg-error').classList.add('hidden');
             document.getElementById('reg-success').classList.add('hidden');
             document.querySelector('#modal-new-register form').reset();
-        }
+        };
 
-        function closeNewRegisterModal() {
+        window.closeNewRegisterModal = () => {
             document.getElementById('modal-new-register').classList.add('hidden-view');
             document.getElementById('modal-new-register').classList.remove('flex');
-        }
+        };
 
         // Cerrar modal al hacer click fuera
-        document.getElementById('modal-new-register').addEventListener('click', function(e) {
+        document.getElementById('modal-new-register')?.addEventListener('click', function(e) {
             if (e.target === this) closeNewRegisterModal();
         });
 
-        function handleNewRegister(e) {
+        window.handleFormSubmit = async (e) => {
             e.preventDefault();
             
             const errorEl = document.getElementById('reg-error');
             const successEl = document.getElementById('reg-success');
             const btn = document.getElementById('btn-reg-submit');
+            const btnText = document.getElementById('btn-submit-text');
+            const isEditing = document.getElementById('edit-id').value;
             
             errorEl.classList.add('hidden');
             successEl.classList.add('hidden');
@@ -753,49 +735,86 @@
             
             // Loading state
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
+            btnText.textContent = 'Procesando...';
             
-            setTimeout(() => {
-                // Crear nuevo registro
-                const newPerson = {
-                    id: Date.now(),
-                    docType: document.getElementById('reg-doc-type').value,
-                    docNum: document.getElementById('reg-doc-num').value,
-                    names: document.getElementById('reg-names').value,
-                    surnames: document.getElementById('reg-surnames').value,
-                    phone: document.getElementById('reg-phone').value,
-                    email: document.getElementById('reg-email').value,
-                    city: document.getElementById('reg-city').value,
-                    profiles: profiles,
-                    status: 'Pendiente',
-                    createdAt: new Date().toISOString()
-                };
+            const data = {
+                docType: document.getElementById('reg-doc-type').value,
+                docNum: document.getElementById('reg-doc-num').value,
+                names: document.getElementById('reg-names').value,
+                surnames: document.getElementById('reg-surnames').value,
+                phone: document.getElementById('reg-phone').value,
+                email: document.getElementById('reg-email').value,
+                city: document.getElementById('reg-city').value,
+                profiles: profiles,
+                status: document.getElementById('reg-status').value,
+                updatedAt: serverTimestamp()
+            };
+            
+            try {
+                if (isEditing) {
+                    // Actualizar existente
+                    await updateDoc(doc(db, "people", isEditing), data);
+                    successEl.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i>Registro actualizado exitosamente. Los cambios se sincronizaron en todos los dispositivos.';
+                } else {
+                    // Crear nuevo
+                    data.createdAt = serverTimestamp();
+                    await addDoc(collection(db, "people"), data);
+                    successEl.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i>¡Registro exitoso! El expediente se sincronizó en la nube.';
+                }
                 
-                // Guardar en localStorage
-                const existing = JSON.parse(localStorage.getItem('novo_people') || '[]');
-                existing.push(newPerson);
-                localStorage.setItem('novo_people', JSON.stringify(existing));
-                
-                // Mostrar éxito
-                successEl.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i>¡Registro exitoso!<br>Expediente #${newPerson.docNum} creado y pendiente de revisión.`;
                 successEl.classList.remove('hidden');
-                
-                // Reset y cerrar
                 e.target.reset();
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Registro';
                 
                 setTimeout(() => {
                     closeNewRegisterModal();
-                    loadPeopleInTable(); // Actualizar tabla
-                }, 2000);
+                }, 1500);
                 
-            }, 1000);
-        }
+            } catch (err) {
+                errorEl.textContent = 'Error: ' + err.message;
+                errorEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = isEditing ? 'Actualizar' : 'Enviar Registro';
+            }
+        };
+
+        // === CHARTS ===
+        window.initCharts = () => {
+            if (chartsInitialized) return;
+            
+            const ctx1 = document.getElementById('chartOps');
+            if (ctx1) {
+                new Chart(ctx1.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ene','Feb','Mar','Abr','May','Jun'],
+                        datasets: [
+                            { label: 'Eventos', data: [12,19,3,5,2,3], backgroundColor: '#1e40af' },
+                            { label: 'Personal', data: [240,350,150,220,450,500], backgroundColor: '#10b981' }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            }
+            
+            const ctx2 = document.getElementById('chartStatus');
+            if (ctx2) {
+                new Chart(ctx2.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Aprobado','Pendiente','Vencido'],
+                        datasets: [{ data: [78, 15, 7], backgroundColor: ['#10b981','#f59e0b','#ef4444'] }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '70%' }
+                });
+            }
+            
+            chartsInitialized = true;
+        };
 
         // === INIT ===
-        window.addEventListener('DOMContentLoaded', function() {
-            checkSession();
+        window.addEventListener('DOMContentLoaded', () => {
+            window.checkSession();
         });
     </script>
 </body>
