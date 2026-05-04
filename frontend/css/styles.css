@@ -1,0 +1,95 @@
+/* Novo Operativa - Estilos Personalizados */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: #f3f4f6; 
+}
+
+.sidebar-link.active { 
+    background-color: #1e3a8a; 
+    color: white; 
+    border-right: 4px solid #60a5fa; 
+}
+
+.sidebar-link:hover:not(.active) { 
+    background-color: #eff6ff; 
+    color: #1e3a8a; 
+}
+
+.chart-container { 
+    position: relative; 
+    height: 300px; 
+    width: 100%; 
+}
+
+.fade-in { 
+    animation: fadeIn 0.2s ease-in-out; 
+}
+
+@keyframes fadeIn { 
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    } 
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    } 
+}
+
+.sync-dot { 
+    width: 8px; 
+    height: 8px; 
+    border-radius: 50%; 
+    display: inline-block; 
+    margin-right: 6px; 
+}
+
+.sync-dot.online { 
+    background-color: #10b981; 
+    box-shadow: 0 0 5px #10b981; 
+}
+
+.auth-tab.active { 
+    border-bottom: 2px solid #1e40af; 
+    color: #1e40af; 
+    font-weight: 600; 
+}
+
+/* Control de vistas */
+#auth-view { 
+    display: flex; 
+}
+
+#dashboard-view { 
+    display: none; 
+}
+
+#dashboard-view.active { 
+    display: flex; 
+}
+
+#auth-view.hidden { 
+    display: none !important; 
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar { 
+    width: 6px; 
+    height: 6px; 
+}
+
+::-webkit-scrollbar-track { 
+    background: #f1f1f1; 
+}
+
+::-webkit-scrollbar-thumb { 
+    background: #cbd5e1; 
+    border-radius: 3px; 
+}
+
+::-webkit-scrollbar-thumb:hover { 
+    background: #94a3b8; 
+}
