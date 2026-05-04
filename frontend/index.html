@@ -14,6 +14,11 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Custom Styles -->
     <link rel="stylesheet" href="css/styles.css">
     
@@ -26,147 +31,414 @@
                         novo: {
                             50: '#eff6ff',
                             100: '#dbeafe',
-                            600: '#1e40af',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
                             700: '#1d4ed8',
-                            800: '#1e3a8a',
-                            900: '#172554',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            950: '#172554',
                         },
-                        success: '#10b981',
-                        warning: '#f59e0b',
-                        danger: '#ef4444',
-                        info: '#64748b'
+                        success: {
+                            50: '#ecfdf5',
+                            500: '#10b981',
+                            600: '#059669',
+                        },
+                        warning: {
+                            50: '#fffbeb',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        danger: {
+                            50: '#fef2f2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                        },
                     },
                     fontFamily: {
                         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-                    }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                    },
                 }
             }
         }
     </script>
 </head>
-<body class="text-gray-800 h-screen overflow-hidden">
+<body class="text-gray-800 h-screen overflow-hidden antialiased">
 
     <!-- AUTH VIEW -->
-    <div id="auth-view" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-novo-900 to-slate-800 z-50 items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-            <div class="p-6 bg-novo-800 text-white text-center">
-                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa-solid fa-layer-group text-2xl"></i>
+    <div id="auth-view" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-novo-950 to-slate-800 z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-slide-up">
+            <div class="p-8 bg-gradient-to-br from-novo-800 to-novo-900 text-white text-center relative overflow-hidden">
+                <!-- Background Pattern -->
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
+                    <div class="absolute bottom-0 right-0 w-40 h-40 bg-white rounded-full translate-x-20 translate-y-20"></div>
                 </div>
-                <h1 class="text-xl font-bold">Novo Operativa</h1>
-                <p class="text-novo-100 text-sm mt-1">Plataforma Integral</p>
+                
+                <div class="relative z-10">
+                    <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fa-solid fa-layer-group text-3xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold tracking-tight">Novo Operativa</h1>
+                    <p class="text-novo-200 text-sm mt-2 font-medium">Plataforma Integral de Gestión</p>
+                </div>
             </div>
 
             <!-- Tabs -->
-            <div class="flex border-b border-gray-200">
-                <button type="button" onclick="switchAuthTab('email')" id="tab-email" class="flex-1 py-3 text-sm font-medium text-center auth-tab active">
-                    <i class="fa-solid fa-envelope mr-2"></i>Correo
+            <div class="flex border-b border-gray-200 bg-gray-50">
+                <button type="button" onclick="switchAuthTab('email')" id="tab-email" class="flex-1 py-4 text-sm font-medium text-center auth-tab active transition-all duration-200">
+                    <i class="fa-solid fa-envelope mr-2"></i>Correo Electrónico
                 </button>
-                <button type="button" onclick="switchAuthTab('document')" id="tab-document" class="flex-1 py-3 text-sm font-medium text-center auth-tab">
+                <button type="button" onclick="switchAuthTab('document')" id="tab-document" class="flex-1 py-4 text-sm font-medium text-center auth-tab transition-all duration-200">
                     <i class="fa-solid fa-id-card mr-2"></i>Documento
                 </button>
             </div>
 
-            <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
+            <form onsubmit="handleLogin(event)" class="p-8 space-y-5">
                 <!-- Email Field -->
                 <div id="field-email">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Correo</label>
-                    <input type="email" id="input-email" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg" placeholder="Camilo@novo.com">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fa-solid fa-envelope text-novo-600 mr-2"></i>Correo Corporativo
+                    </label>
+                    <input type="email" id="input-email" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-novo-500 focus:border-novo-500 transition-all duration-200" placeholder="Camilo@novo.com" autocomplete="email">
                 </div>
 
                 <!-- Document Fields -->
-                <div id="field-document" class="hidden space-y-3">
+                <div id="field-document" class="hidden space-y-4">
                     <div class="grid grid-cols-3 gap-3">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-                            <select id="input-doc-type" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo</label>
+                            <select id="input-doc-type" class="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-novo-500 focus:border-novo-500 transition-all duration-200">
                                 <option value="CC">CC</option>
                                 <option value="CE">CE</option>
+                                <option value="TI">TI</option>
+                                <option value="PAS">PAS</option>
                             </select>
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Número</label>
-                            <input type="text" id="input-doc-num" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg" placeholder="1000376905">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Número</label>
+                            <input type="text" id="input-doc-num" class="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-novo-500 focus:border-novo-500 transition-all duration-200" placeholder="1000376905" autocomplete="off">
                         </div>
                     </div>
                 </div>
 
                 <!-- Password -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                    <input type="password" id="input-password" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg" placeholder="••••••••">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fa-solid fa-lock text-novo-600 mr-2"></i>Contraseña
+                    </label>
+                    <input type="password" id="input-password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-novo-500 focus:border-novo-500 transition-all duration-200" placeholder="••••••••" autocomplete="current-password">
                 </div>
 
                 <!-- Error Message -->
-                <div id="error-msg" class="hidden text-red-600 text-sm bg-red-50 p-3 rounded-lg"></div>
+                <div id="error-msg" class="hidden text-red-600 text-sm bg-red-50 border border-red-200 p-4 rounded-xl flex items-start">
+                    <i class="fa-solid fa-circle-exclamation mr-2 mt-0.5"></i>
+                    <span></span>
+                </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full bg-novo-600 hover:bg-novo-700 text-white font-semibold py-2.5 rounded-lg">
-                    <i class="fa-solid fa-right-to-bracket mr-2"></i>Ingresar
+                <button type="submit" class="w-full bg-gradient-to-r from-novo-600 to-novo-700 hover:from-novo-700 hover:to-novo-800 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i>Ingresar a la Plataforma
                 </button>
 
-                <p class="text-center text-xs text-gray-400">
-                    Demo: Camilo@novo.com / 123456<br>CC: 1000376905 / 123456
-                </p>
+                <div class="text-center pt-4 border-t border-gray-100">
+                    <p class="text-xs text-gray-500">
+                        <i class="fa-solid fa-info-circle mr-1"></i>
+                        <strong>Demo:</strong> Camilo@novo.com / 123456<br>
+                        <strong>CC:</strong> 1000376905 / 123456
+                    </p>
+                </div>
             </form>
         </div>
     </div>
 
     <!-- DASHBOARD VIEW -->
-    <div id="dashboard-view" class="h-screen flex overflow-hidden">
+    <div id="dashboard-view" class="h-screen flex overflow-hidden bg-gray-100">
         <!-- Sidebar -->
-        <aside class="w-64 bg-novo-900 text-gray-300 hidden md:flex flex-col">
-            <div class="p-5 border-b border-novo-700">
-                <h1 class="font-bold text-white">Novo Ops</h1>
+        <aside class="w-64 bg-gradient-to-b from-novo-950 to-novo-900 text-gray-300 hidden md:flex flex-col shadow-2xl">
+            <div class="p-6 border-b border-novo-800 bg-novo-950/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-layer-group text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-white text-lg tracking-tight">Novo Ops</h1>
+                        <p class="text-xs text-novo-300">Plataforma Integral</p>
+                    </div>
+                </div>
             </div>
-            <nav class="flex-1 p-3 space-y-1">
-                <a href="#" onclick="showSection('dashboard')" class="sidebar-link active flex items-center gap-3 px-3 py-2 rounded text-sm">
-                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="#" onclick="showSection('dashboard')" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200">
+                    <i class="fa-solid fa-chart-pie text-lg"></i> 
+                    <span>Dashboard</span>
                 </a>
-                <a href="#" onclick="showSection('talento')" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded text-sm">
-                    <i class="fa-solid fa-users"></i> Talento Humano
+                <a href="#" onclick="showSection('talento')" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:bg-novo-800/50">
+                    <i class="fa-solid fa-users text-lg"></i> 
+                    <span>Talento Humano</span>
+                </a>
+                <a href="#" onclick="showSection('empresas')" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:bg-novo-800/50">
+                    <i class="fa-solid fa-building text-lg"></i> 
+                    <span>Empresas</span>
+                </a>
+                <a href="#" onclick="showSection('eventos')" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:bg-novo-800/50">
+                    <i class="fa-solid fa-calendar-check text-lg"></i> 
+                    <span>Eventos</span>
                 </a>
             </nav>
-            <div class="p-4 border-t border-novo-700">
-                <button onclick="logout()" class="text-sm text-white hover:text-novo-200">
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Cerrar Sesión
+            <div class="p-4 border-t border-novo-800 bg-novo-950/30">
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 text-sm font-medium text-red-300 hover:text-red-200 hover:bg-red-500/10 px-4 py-2.5 rounded-xl transition-all duration-200">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Cerrar Sesión</span>
                 </button>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
-            <header class="bg-white border-b h-16 flex items-center justify-between px-6">
-                <h2 class="text-xl font-bold">Panel de Control</h2>
-                <span class="text-sm text-gray-500">Bienvenido</span>
+        <div class="flex-1 flex flex-col min-w-0">
+            <!-- Mobile Header -->
+            <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <button class="md:hidden text-gray-500 hover:text-gray-700">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold text-gray-800">Panel de Control</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex items-center gap-2 text-sm text-gray-600">
+                        <div class="w-2 h-2 bg-success-500 rounded-full animate-pulse"></div>
+                        <span class="text-gray-500" id="user-welcome">Bienvenido</span>
+                    </div>
+                    <div class="w-10 h-10 bg-gradient-to-br from-novo-500 to-novo-700 rounded-full flex items-center justify-center text-white font-semibold shadow-lg">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
             </header>
             
-            <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
-                <section id="section-dashboard" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Empresas</p>
-                            <h3 class="text-3xl font-bold">24</h3>
+            <main class="flex-1 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+                <!-- Dashboard Section -->
+                <section id="section-dashboard" class="space-y-6 animate-fade-in">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-building text-blue-600 text-xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+2 este mes</span>
+                            </div>
+                            <p class="text-sm text-gray-500 font-medium">Empresas Activas</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-1" id="stat-empresas">24</h3>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Personal</p>
-                            <h3 class="text-3xl font-bold">3,456</h3>
+                        
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-users text-purple-600 text-xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+156 esta semana</span>
+                            </div>
+                            <p class="text-sm text-gray-500 font-medium">Personal Registrado</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-1" id="stat-personal">3,456</h3>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Eventos</p>
-                            <h3 class="text-3xl font-bold">45</h3>
+                        
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-calendar-check text-orange-600 text-xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded-full">5 próximos</span>
+                            </div>
+                            <p class="text-sm text-gray-500 font-medium">Eventos Programados</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-1" id="stat-eventos">45</h3>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Sync</p>
-                            <h3 class="text-3xl font-bold text-success">OK</h3>
+                        
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-sync text-green-600 text-xl"></i>
+                                </div>
+                                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                    Activo
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 font-medium">Estado de Sincronización</p>
+                            <h3 class="text-3xl font-bold text-green-600 mt-1" id="stat-sync">OK</h3>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-line text-novo-600"></i>
+                                Crecimiento Mensual
+                            </h3>
+                            <div class="chart-container" style="height: 280px;">
+                                <canvas id="growthChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-novo-600"></i>
+                                Distribución por Departamento
+                            </h3>
+                            <div class="chart-container" style="height: 280px;">
+                                <canvas id="departmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-novo-600"></i>
+                            Actividad Reciente
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-user-plus text-blue-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-800">Nuevo empleado registrado</p>
+                                    <p class="text-xs text-gray-500 mt-1">María González - Departamento de Ventas</p>
+                                    <p class="text-xs text-gray-400 mt-2">Hace 2 horas</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-check-circle text-green-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-800">Sincronización completada</p>
+                                    <p class="text-xs text-gray-500 mt-1">Todos los sistemas actualizados correctamente</p>
+                                    <p class="text-xs text-gray-400 mt-2">Hace 4 horas</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                                <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-calendar text-orange-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-800">Evento programado</p>
+                                    <p class="text-xs text-gray-500 mt-1">Capacitación trimestral - Sala de Juntas</p>
+                                    <p class="text-xs text-gray-400 mt-2">Hace 1 día</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <section id="section-talento" class="hidden space-y-6">
-                    <div class="bg-white p-5 rounded-xl shadow">
-                        <h3 class="text-lg font-bold mb-4">Talento Humano</h3>
-                        <p>Contenido de Talento Humano</p>
+                <!-- Talento Humano Section -->
+                <section id="section-talento" class="hidden space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <i class="fa-solid fa-users text-novo-600"></i>
+                                Gestión de Talento Humano
+                            </h3>
+                            <button class="bg-novo-600 hover:bg-novo-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-200">
+                                <i class="fa-solid fa-plus mr-2"></i>Nuevo Empleado
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left py-4 px-4 text-sm font-semibold text-gray-600">Nombre</th>
+                                        <th class="text-left py-4 px-4 text-sm font-semibold text-gray-600">Cargo</th>
+                                        <th class="text-left py-4 px-4 text-sm font-semibold text-gray-600">Departamento</th>
+                                        <th class="text-left py-4 px-4 text-sm font-semibold text-gray-600">Estado</th>
+                                        <th class="text-left py-4 px-4 text-sm font-semibold text-gray-600">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                        <td class="py-4 px-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">MG</div>
+                                                <span class="font-medium text-gray-800">María González</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-4 text-gray-600">Ejecutiva de Ventas</td>
+                                        <td class="py-4 px-4 text-gray-600">Comercial</td>
+                                        <td class="py-4 px-4"><span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-3 py-1.5 rounded-full"><span class="w-2 h-2 bg-green-500 rounded-full"></span>Activo</span></td>
+                                        <td class="py-4 px-4">
+                                            <button class="text-gray-400 hover:text-novo-600 transition-colors"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                        <td class="py-4 px-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">JR</div>
+                                                <span class="font-medium text-gray-800">Juan Rodríguez</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-4 text-gray-600">Desarrollador Senior</td>
+                                        <td class="py-4 px-4 text-gray-600">Tecnología</td>
+                                        <td class="py-4 px-4"><span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-3 py-1.5 rounded-full"><span class="w-2 h-2 bg-green-500 rounded-full"></span>Activo</span></td>
+                                        <td class="py-4 px-4">
+                                            <button class="text-gray-400 hover:text-novo-600 transition-colors"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="py-4 px-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-semibold">AL</div>
+                                                <span class="font-medium text-gray-800">Ana López</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-4 text-gray-600">Gerente de Marketing</td>
+                                        <td class="py-4 px-4 text-gray-600">Marketing</td>
+                                        <td class="py-4 px-4"><span class="inline-flex items-center gap-1.5 text-xs font-semibold text-yellow-600 bg-yellow-50 px-3 py-1.5 rounded-full"><span class="w-2 h-2 bg-yellow-500 rounded-full"></span>Vacaciones</span></td>
+                                        <td class="py-4 px-4">
+                                            <button class="text-gray-400 hover:text-novo-600 transition-colors"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Empresas Section -->
+                <section id="section-empresas" class="hidden space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-building text-novo-600"></i>
+                            Empresas Asociadas
+                        </h3>
+                        <p class="text-gray-600">Listado y gestión de empresas del grupo Novo.</p>
+                    </div>
+                </section>
+
+                <!-- Eventos Section -->
+                <section id="section-eventos" class="hidden space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-check text-novo-600"></i>
+                            Próximos Eventos
+                        </h3>
+                        <p class="text-gray-600">Calendario de eventos y capacitaciones.</p>
                     </div>
                 </section>
             </main>
