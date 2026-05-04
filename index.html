@@ -38,7 +38,7 @@
         .sidebar-link.active { background-color: #1e3a8a; color: white; border-right: 4px solid #60a5fa; }
         .sidebar-link:hover:not(.active) { background-color: #eff6ff; color: #1e3a8a; }
         .chart-container { position: relative; height: 300px; width: 100%; }
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        .fade-in { animation: fadeIn 0.2s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .sync-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
         .sync-dot.online { background-color: #10b981; box-shadow: 0 0 5px #10b981; }
@@ -49,7 +49,7 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Auth Styles - NUEVO */
+        /* Auth Styles */
         .auth-view { display: flex !important; }
         .dashboard-hidden { display: none !important; }
         .auth-tab.active { border-bottom: 2px solid #1e40af; color: #1e40af; font-weight: 600; }
@@ -57,10 +57,9 @@
 </head>
 <body class="text-gray-800 h-screen overflow-hidden">
 
-    <!-- ==================== AUTH VIEW (NUEVO) ==================== -->
+    <!-- AUTH VIEW -->
     <div id="auth-view" class="auth-view fixed inset-0 bg-gradient-to-br from-slate-900 via-novo-900 to-slate-800 z-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Header -->
             <div class="p-6 bg-novo-800 text-white text-center">
                 <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-sm border border-white/20">
                     <i class="fa-solid fa-layer-group text-2xl"></i>
@@ -69,7 +68,6 @@
                 <p class="text-novo-100 text-sm mt-1">Plataforma Integral de Gestión</p>
             </div>
 
-            <!-- Auth Tabs -->
             <div class="flex border-b border-gray-200">
                 <button type="button" onclick="switchAuthTab('email')" id="tab-email" class="flex-1 py-3 text-sm font-medium text-center auth-tab active transition">
                     <i class="fa-solid fa-envelope mr-2"></i>Correo Electrónico
@@ -79,10 +77,8 @@
                 </button>
             </div>
 
-            <!-- Login Form -->
             <form id="auth-form" onsubmit="handleLogin(event)" class="p-6 space-y-4">
                 
-                <!-- Email Fields -->
                 <div id="field-email" class="space-y-2">
                     <label class="block text-sm font-medium text-gray-700">Correo Electrónico Corporativo</label>
                     <div class="relative">
@@ -91,7 +87,6 @@
                     </div>
                 </div>
 
-                <!-- Document Fields (Hidden by default) -->
                 <div id="field-document" class="space-y-3 hidden">
                     <div class="grid grid-cols-3 gap-3">
                         <div>
@@ -113,11 +108,9 @@
                     </div>
                 </div>
 
-                <!-- Password Field (Shared) -->
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="block text-sm font-medium text-gray-700">Contraseña</label>
-                        <a href="#" class="text-xs text-novo-600 hover:underline font-medium">¿Olvidaste tu acceso?</a>
                     </div>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-lock"></i></span>
@@ -128,17 +121,14 @@
                     </div>
                 </div>
 
-                <!-- Error Message -->
                 <div id="auth-error" class="hidden text-red-600 text-sm bg-red-50 border border-red-100 p-3 rounded-lg flex items-center gap-2">
                     <i class="fa-solid fa-circle-exclamation"></i> <span id="auth-error-msg">Credenciales inválidas</span>
                 </div>
 
-                <!-- Login Button -->
-                <button type="submit" id="btn-login" class="w-full bg-novo-600 hover:bg-novo-700 text-white font-semibold py-2.5 rounded-lg shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+                <button type="submit" id="btn-login" class="w-full bg-novo-600 hover:bg-novo-700 text-white font-semibold py-2.5 rounded-lg shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket"></i> Ingresar al Sistema
                 </button>
 
-                <!-- Demo Credentials Hint -->
                 <div class="pt-2 text-center text-xs text-gray-400 space-y-1">
                     <p><strong>Acceso Demo:</strong></p>
                     <p>📧 Camilo@novo.com / 123456</p>
@@ -148,10 +138,9 @@
         </div>
     </div>
 
-    <!-- ==================== DASHBOARD VIEW (ORIGINAL + MODIFICADO) ==================== -->
+    <!-- DASHBOARD VIEW -->
     <div id="dashboard-view" class="dashboard-hidden h-screen flex overflow-hidden">
 
-        <!-- Sidebar -->
         <aside id="sidebar" class="w-64 bg-novo-900 text-gray-300 flex flex-col transition-all duration-300 hidden md:flex shadow-xl z-20">
             <div class="p-5 flex items-center gap-3 border-b border-novo-700">
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-novo-800 font-bold text-xl shadow-lg">
@@ -199,10 +188,8 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <div class="flex-1 flex flex-col h-screen overflow-hidden">
             
-            <!-- Header -->
             <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shadow-sm z-10">
                 <div class="flex items-center gap-4">
                     <button onclick="toggleSidebar()" class="md:hidden text-gray-500 hover:text-novo-600 transition">
@@ -212,7 +199,6 @@
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <!-- Sync Status -->
                     <div id="sync-status" class="hidden md:flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium">
                         <span class="sync-dot online" id="sync-dot"></span>
                         <span id="sync-text">Conectado</span>
@@ -223,19 +209,15 @@
                         <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger rounded-full border border-white"></span>
                     </button>
                     
-                    <!-- Logout Button (NUEVO) -->
                     <button onclick="logout()" class="p-2 text-gray-400 hover:text-danger transition" title="Cerrar Sesión">
                         <i class="fa-solid fa-right-from-bracket text-lg"></i>
                     </button>
                 </div>
             </header>
 
-            <!-- Content Area -->
             <main id="main-content" class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6 relative">
                 
-                <!-- SECTION: DASHBOARD -->
                 <section id="section-dashboard" class="fade-in space-y-6">
-                    <!-- KPIs -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
                             <div class="flex justify-between items-start">
@@ -298,7 +280,6 @@
                         </div>
                     </div>
 
-                    <!-- Charts Row -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
                             <h4 class="font-bold text-gray-800 mb-4">Operación Mensual</h4>
@@ -322,7 +303,6 @@
                         </div>
                     </div>
 
-                    <!-- Alerts & Recent Activity -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                             <div class="flex justify-between items-center mb-4">
@@ -389,7 +369,6 @@
                     </div>
                 </section>
 
-                <!-- SECTION: TALENTO HUMANO -->
                 <section id="section-talento" class="hidden fade-in space-y-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex justify-between items-center mb-6">
@@ -404,7 +383,6 @@
                             </div>
                         </div>
 
-                        <!-- Filters -->
                         <div class="flex gap-4 mb-4 overflow-x-auto pb-2">
                             <input type="text" placeholder="Buscar por documento o nombre..." class="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-novo-600">
                             <select class="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm">
@@ -476,7 +454,6 @@
                     </div>
                 </section>
 
-                <!-- SECTION: CONVOCATORIAS -->
                 <section id="section-convocatorias" class="hidden fade-in space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
@@ -496,7 +473,6 @@
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-800 mb-4">Gestión de Convocatorias</h3>
                         <div class="space-y-4">
-                            <!-- Card Item -->
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                                 <div class="flex justify-between items-start">
                                     <div>
@@ -528,7 +504,6 @@
                                     <button class="text-xs bg-gray-50 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-100 font-medium">Cerrar</button>
                                 </div>
                             </div>
-                            <!-- Card Item -->
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                                 <div class="flex justify-between items-start">
                                     <div>
@@ -563,7 +538,6 @@
                     </div>
                 </section>
 
-                <!-- SECTION: EVENTOS -->
                 <section id="section-eventos" class="hidden fade-in space-y-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-800 mb-4">Monitor Operativo de Eventos</h3>
@@ -613,7 +587,6 @@
                     </div>
                 </section>
 
-                <!-- SECTION: INVENTARIO -->
                 <section id="section-inventario" class="hidden fade-in space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
@@ -676,7 +649,6 @@
                     </div>
                 </section>
 
-                <!-- SECTION: DOCUMENTOS -->
                 <section id="section-documentos" class="hidden fade-in space-y-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex justify-between items-center mb-4">
@@ -728,7 +700,6 @@
                     </div>
                 </section>
 
-                <!-- SECTION: CONFIGURACION -->
                 <section id="section-configuracion" class="hidden fade-in space-y-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-800 mb-4">Gobierno y Configuración Global</h3>
@@ -770,25 +741,19 @@
         </div>
     </div>
 
-    <!-- ==================== JAVASCRIPT (ORIGINAL + AUTH FUNCTIONS) ==================== -->
     <script>
-        // === AUTH CONFIGURATION (NUEVO) ===
         const VALID_CREDENTIALS = {
             email: { user: 'camilo@novo.com', pass: '123456' },
             document: { type: 'CC', num: '1000376905', pass: '123456' }
         };
 
-        // === AUTH FUNCTIONS (NUEVO) ===
+        let chartsInitialized = false;
+
         function switchAuthTab(method) {
-            // Update tabs
             document.getElementById('tab-email').classList.toggle('active', method === 'email');
             document.getElementById('tab-document').classList.toggle('active', method === 'document');
-            
-            // Show/hide fields
             document.getElementById('field-email').classList.toggle('hidden', method !== 'email');
             document.getElementById('field-document').classList.toggle('hidden', method === 'email');
-            
-            // Clear inputs and errors
             document.getElementById('input-email').value = '';
             document.getElementById('input-doc-num').value = '';
             document.getElementById('input-password').value = '';
@@ -812,76 +777,48 @@
             document.getElementById('auth-error').classList.add('hidden');
         }
 
+        // === FUNCIÓN DE LOGIN OPTIMIZADA - SIN RETRASOS ===
         function handleLogin(e) {
             e.preventDefault();
             hideAuthError();
             
-            const btn = document.getElementById('btn-login');
             const isEmailMode = !document.getElementById('field-email').classList.contains('hidden');
+            const password = document.getElementById('input-password').value;
             
-            let identifier, method;
+            let valid = false;
+            
             if (isEmailMode) {
-                identifier = document.getElementById('input-email').value.trim().toLowerCase();
-                method = 'email';
-                if (!identifier.includes('@')) return showAuthError('Ingrese un correo válido.');
+                const email = document.getElementById('input-email').value.trim().toLowerCase();
+                valid = (email === VALID_CREDENTIALS.email.user && password === VALID_CREDENTIALS.email.pass);
             } else {
                 const type = document.getElementById('input-doc-type').value;
                 const num = document.getElementById('input-doc-num').value.trim();
-                identifier = `${type}:${num}`;
-                method = 'document';
-                if (!num) return showAuthError('Ingrese el número de documento.');
-            }
-
-            const password = document.getElementById('input-password').value;
-            if (!password) return showAuthError('La contraseña es obligatoria.');
-
-            // Loading state
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verificando...';
-
-            // Simulate network delay
-            setTimeout(() => {
-                // Validate credentials
-                let valid = false;
-                if (method === 'email') {
-                    valid = (identifier === VALID_CREDENTIALS.email.user && password === VALID_CREDENTIALS.email.pass);
-                } else {
-                    valid = (identifier === `${VALID_CREDENTIALS.document.type}:${VALID_CREDENTIALS.document.num}` && password === VALID_CREDENTIALS.document.pass);
-                }
-
-                if (valid) {
-                    // Save session
-                    sessionStorage.setItem('novo_session', JSON.stringify({
-                        name: 'Camilo',
-                        role: 'Administrador',
-                        avatar: 'https://ui-avatars.com/api/?name=Camilo&background=fff&color=1e3a8a'
-                    }));
-                    enterDashboard();
-                } else {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Ingresar al Sistema';
-                    showAuthError('Credenciales inválidas. Verifica: Camilo@novo.com / 123456 o CC:1000376905 / 123456');
-                }
-            }, 600);
-        }
-
-        function enterDashboard() {
-            // Hide auth, show dashboard
-            document.getElementById('auth-view').style.display = 'none';
-            document.getElementById('dashboard-view').classList.remove('dashboard-hidden');
-            
-            // Load user info
-            const user = JSON.parse(sessionStorage.getItem('novo_session'));
-            if (user) {
-                document.getElementById('user-name').innerText = user.name;
-                document.getElementById('user-role').innerText = user.role;
-                document.getElementById('user-avatar').src = user.avatar;
+                valid = (type === VALID_CREDENTIALS.document.type && 
+                        num === VALID_CREDENTIALS.document.num && 
+                        password === VALID_CREDENTIALS.document.pass);
             }
             
-            // Initialize charts if needed
-            if (!window.chartsInitialized) {
-                initCharts();
-                window.chartsInitialized = true;
+            if (valid) {
+                // INGRESO INMEDIATO - SIN setTimeout
+                sessionStorage.setItem('novo_session', JSON.stringify({
+                    name: 'Camilo',
+                    role: 'Administrador',
+                    avatar: 'https://ui-avatars.com/api/?name=Camilo&background=fff&color=1e3a8a'
+                }));
+                
+                // Transición inmediata al dashboard
+                document.getElementById('auth-view').style.display = 'none';
+                document.getElementById('dashboard-view').classList.remove('dashboard-hidden');
+                
+                // Inicializar gráficos en background (no bloquea)
+                setTimeout(() => {
+                    if (!chartsInitialized) {
+                        initCharts();
+                        chartsInitialized = true;
+                    }
+                }, 100);
+            } else {
+                showAuthError('Credenciales inválidas. Verifica: Camilo@novo.com / 123456 o CC:1000376905 / 123456');
             }
         }
 
@@ -893,11 +830,17 @@
         function checkSession() {
             const saved = sessionStorage.getItem('novo_session');
             if (saved) {
-                enterDashboard();
+                document.getElementById('auth-view').style.display = 'none';
+                document.getElementById('dashboard-view').classList.remove('dashboard-hidden');
+                setTimeout(() => {
+                    if (!chartsInitialized) {
+                        initCharts();
+                        chartsInitialized = true;
+                    }
+                }, 100);
             }
         }
 
-        // === ORIGINAL FUNCTIONS (UNCHANGED) ===
         let currentSection = 'dashboard';
         let isOffline = false;
 
@@ -969,57 +912,60 @@
         }
 
         function initCharts() {
-            const ctxOps = document.getElementById('chartOps').getContext('2d');
-            new Chart(ctxOps, {
-                type: 'bar',
-                data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Eventos Ejecutados',
-                        data: [12, 19, 3, 5, 2, 3],
-                        backgroundColor: '#1e3a8a',
-                        borderRadius: 4
-                    }, {
-                        label: 'Personal Movilizado',
-                        data: [240, 350, 150, 220, 450, 500],
-                        backgroundColor: '#10b981',
-                        borderRadius: 4,
-                        yAxisID: 'y1'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: {
-                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
-                        y1: { beginAtZero: true, position: 'right', grid: { display: false } },
-                        x: { grid: { display: false } }
+            const ctxOps = document.getElementById('chartOps');
+            if (ctxOps && !ctxOps.chart) {
+                ctxOps.chart = new Chart(ctxOps.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Eventos Ejecutados',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: '#1e3a8a',
+                            borderRadius: 4
+                        }, {
+                            label: 'Personal Movilizado',
+                            data: [240, 350, 150, 220, 450, 500],
+                            backgroundColor: '#10b981',
+                            borderRadius: 4,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                            y1: { beginAtZero: true, position: 'right', grid: { display: false } },
+                            x: { grid: { display: false } }
+                        }
                     }
-                }
-            });
+                });
+            }
 
-            const ctxStatus = document.getElementById('chartStatus').getContext('2d');
-            new Chart(ctxStatus, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Aprobado', 'Pendiente', 'Vencido', 'Restringido'],
-                    datasets: [{
-                        data: [78, 15, 5, 2],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#64748b'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    cutout: '70%'
-                }
-            });
+            const ctxStatus = document.getElementById('chartStatus');
+            if (ctxStatus && !ctxStatus.chart) {
+                ctxStatus.chart = new Chart(ctxStatus.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Aprobado', 'Pendiente', 'Vencido', 'Restringido'],
+                        datasets: [{
+                            data: [78, 15, 5, 2],
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#64748b'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        cutout: '70%'
+                    }
+                });
+            }
         }
 
-        // === INIT ===
         window.addEventListener('DOMContentLoaded', function() {
             checkSession();
         });
