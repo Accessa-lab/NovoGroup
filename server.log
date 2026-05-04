@@ -1,0 +1,11 @@
+
+> novo-operativa@1.0.0 dev
+> nodemon backend/server.js
+
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node backend/server.js`[39m
+✅ Servidor corriendo en http://localhost:3000
+📁 Modo: development
