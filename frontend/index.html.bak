@@ -3,178 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Plataforma Operativa Novo</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- Tailwind Config -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        novo: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            600: '#1e40af',
-                            700: '#1d4ed8',
-                            800: '#1e3a8a',
-                            900: '#172554',
-                        },
-                        success: '#10b981',
-                        warning: '#f59e0b',
-                        danger: '#ef4444',
-                        info: '#64748b'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-                    }
-                }
-            }
+    <title>NovoGroup - Plataforma Integral</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --sidebar-width: 260px;
         }
-    </script>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f1f5f9; color: var(--dark); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Login Styles */
+        #login-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
+        }
+        .login-box {
+            background: white; padding: 2.5rem; border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); width: 100%; max-width: 400px;
+        }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header h1 { color: var(--primary); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--dark); }
+        .form-control {
+            width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1;
+            border-radius: 6px; font-size: 0.95rem; transition: all 0.3s;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .btn-primary {
+            width: 100%; padding: 0.75rem; background: var(--primary); color: white;
+            border: none; border-radius: 6px; font-weight: 600; cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-primary:hover { background: #1d4ed8; }
+
+        /* Dashboard Layout */
+        #dashboard-container { display: none; width: 100%; height: 100%; }
+        .sidebar {
+            width: var(--sidebar-width); background: white; border-right: 1px solid #e2e8f0;
+            display: flex; flex-direction: column; transition: transform 0.3s;
+        }
+        .sidebar-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; }
+        .brand { font-size: 1.25rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; }
+        .nav-menu { flex: 1; padding: 1rem; overflow-y: auto; }
+        .nav-item {
+            padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 6px;
+            color: var(--secondary); cursor: pointer; display: flex; align-items: center; gap: 0.75rem;
+            transition: all 0.2s; text-decoration: none;
+        }
+        .nav-item:hover, .nav-item.active { background: #eff6ff; color: var(--primary); }
+        .user-profile { padding: 1rem; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.75rem; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .top-bar {
+            height: 64px; background: white; border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 2rem;
+        }
+        .content-area { flex: 1; padding: 2rem; overflow-y: auto; }
+        
+        /* Modules */
+        .module { display: none; }
+        .module.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.25rem; font-weight: 600; color: var(--dark); }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { font-weight: 600; color: var(--secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        tr:hover { background: #f8fafc; }
+        .badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+
+        /* Modal Styles */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--secondary); }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+        .btn-secondary { padding: 0.5rem 1rem; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; }
+        .btn-success { padding: 0.5rem 1rem; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 1.875rem; font-weight: 700; color: var(--dark); margin-top: 0.5rem; }
+        .stat-label { color: var(--secondary); font-size: 0.875rem; }
+    </style>
 </head>
-<body class="text-gray-800 h-screen overflow-hidden">
+<body>
 
-    <!-- AUTH VIEW -->
-    <div id="auth-view" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-novo-900 to-slate-800 z-50 items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-            <div class="p-6 bg-novo-800 text-white text-center">
-                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa-solid fa-layer-group text-2xl"></i>
-                </div>
-                <h1 class="text-xl font-bold">Novo Operativa</h1>
-                <p class="text-novo-100 text-sm mt-1">Plataforma Integral</p>
+    <!-- LOGIN -->
+    <div id="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1><i class="fas fa-layer-group"></i> NovoGroup</h1>
+                <p style="color: var(--secondary);">Plataforma Operativa Integral</p>
             </div>
-
-            <!-- Tabs -->
-            <div class="flex border-b border-gray-200">
-                <button type="button" onclick="switchAuthTab('email')" id="tab-email" class="flex-1 py-3 text-sm font-medium text-center auth-tab active">
-                    <i class="fa-solid fa-envelope mr-2"></i>Correo
-                </button>
-                <button type="button" onclick="switchAuthTab('document')" id="tab-document" class="flex-1 py-3 text-sm font-medium text-center auth-tab">
-                    <i class="fa-solid fa-id-card mr-2"></i>Documento
-                </button>
-            </div>
-
-            <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
-                <!-- Email Field -->
-                <div id="field-email">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Correo</label>
-                    <input type="email" id="input-email" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg" placeholder="Camilo@novo.com">
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Email Corporativo</label>
+                    <input type="email" id="email" class="form-control" placeholder="usuario@empresa.com" required value="super@novo.com">
                 </div>
-
-                <!-- Document Fields -->
-                <div id="field-document" class="hidden space-y-3">
-                    <div class="grid grid-cols-3 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-                            <select id="input-doc-type" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg">
-                                <option value="CC">CC</option>
-                                <option value="CE">CE</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Número</label>
-                            <input type="text" id="input-doc-num" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg" placeholder="1000376905">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required value="123456">
                 </div>
-
-                <!-- Password -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                    <input type="password" id="input-password" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg" placeholder="••••••••">
-                </div>
-
-                <!-- Error Message -->
-                <div id="error-msg" class="hidden text-red-600 text-sm bg-red-50 p-3 rounded-lg"></div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="w-full bg-novo-600 hover:bg-novo-700 text-white font-semibold py-2.5 rounded-lg">
-                    <i class="fa-solid fa-right-to-bracket mr-2"></i>Ingresar
-                </button>
-
-                <p class="text-center text-xs text-gray-400">
-                    Demo: Camilo@novo.com / 123456<br>CC: 1000376905 / 123456
-                </p>
+                <button type="submit" class="btn-primary">Iniciar Sesión</button>
             </form>
+            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem; color: var(--secondary);">
+                <p>Demo: super@novo.com / 123456</p>
+            </div>
         </div>
     </div>
 
-    <!-- DASHBOARD VIEW -->
-    <div id="dashboard-view" class="h-screen flex overflow-hidden">
+    <!-- DASHBOARD -->
+    <div id="dashboard-container">
         <!-- Sidebar -->
-        <aside class="w-64 bg-novo-900 text-gray-300 hidden md:flex flex-col">
-            <div class="p-5 border-b border-novo-700">
-                <h1 class="font-bold text-white">Novo Ops</h1>
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand"><i class="fas fa-layer-group"></i> NovoGroup</div>
             </div>
-            <nav class="flex-1 p-3 space-y-1">
-                <a href="#" onclick="showSection('dashboard')" class="sidebar-link active flex items-center gap-3 px-3 py-2 rounded text-sm">
-                    <i class="fa-solid fa-chart-pie"></i> Dashboard
-                </a>
-                <a href="#" onclick="showSection('talento')" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded text-sm">
-                    <i class="fa-solid fa-users"></i> Talento Humano
-                </a>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-module="dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#" class="nav-item" data-module="empresas"><i class="fas fa-building"></i> Empresas</a>
+                <a href="#" class="nav-item" data-module="usuarios"><i class="fas fa-users"></i> Usuarios</a>
+                <a href="#" class="nav-item" data-module="eventos"><i class="fas fa-calendar-alt"></i> Eventos</a>
+                <a href="#" class="nav-item" data-module="inventario"><i class="fas fa-boxes"></i> Inventario</a>
+                <a href="#" class="nav-item" data-module="talento"><i class="fas fa-user-tie"></i> Talento Humano</a>
             </nav>
-            <div class="p-4 border-t border-novo-700">
-                <button onclick="logout()" class="text-sm text-white hover:text-novo-200">
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Cerrar Sesión
-                </button>
+            <div class="user-profile">
+                <div class="avatar" id="user-avatar">SG</div>
+                <div>
+                    <div style="font-weight: 600;" id="user-name">Super Admin</div>
+                    <div style="font-size: 0.75rem; color: var(--secondary);" id="user-role">Global</div>
+                </div>
+                <button onclick="logout()" style="margin-left: auto; background: none; border: none; cursor: pointer; color: var(--danger);"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
-            <header class="bg-white border-b h-16 flex items-center justify-between px-6">
-                <h2 class="text-xl font-bold">Panel de Control</h2>
-                <span class="text-sm text-gray-500">Bienvenido</span>
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 id="page-title">Dashboard General</h2>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="badge badge-success"><i class="fas fa-wifi"></i> En Línea</span>
+                    <div id="clock" style="font-weight: 600;"></div>
+                </div>
             </header>
             
-            <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
-                <section id="section-dashboard" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Empresas</p>
-                            <h3 class="text-3xl font-bold">24</h3>
+            <div class="content-area">
+                <!-- Dashboard Module -->
+                <div id="mod-dashboard" class="module active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Empresas Activas</div>
+                            <div class="stat-value" id="stat-empresas">0</div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Personal</p>
-                            <h3 class="text-3xl font-bold">3,456</h3>
+                        <div class="stat-card">
+                            <div class="stat-label">Usuarios Totales</div>
+                            <div class="stat-value" id="stat-usuarios">0</div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Eventos</p>
-                            <h3 class="text-3xl font-bold">45</h3>
+                        <div class="stat-card">
+                            <div class="stat-label">Eventos en Curso</div>
+                            <div class="stat-value" id="stat-eventos">0</div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow">
-                            <p class="text-sm text-gray-500">Sync</p>
-                            <h3 class="text-3xl font-bold text-success">OK</h3>
+                        <div class="stat-card">
+                            <div class="stat-label">Personal Operativo</div>
+                            <div class="stat-value" id="stat-personal">0</div>
                         </div>
                     </div>
-                </section>
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title">Actividad Reciente</h3></div>
+                        <p style="color: var(--secondary);">No hay actividad reciente registrada.</p>
+                    </div>
+                </div>
 
-                <section id="section-talento" class="hidden space-y-6">
-                    <div class="bg-white p-5 rounded-xl shadow">
-                        <h3 class="text-lg font-bold mb-4">Talento Humano</h3>
-                        <p>Contenido de Talento Humano</p>
+                <!-- Empresas Module -->
+                <div id="mod-empresas" class="module">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Gestión de Empresas</h3>
+                            <!-- BOTÓN AGREGADO AQUÍ -->
+                            <button id="btnNuevaEmpresa" class="btn-primary" style="width: auto; padding: 0.5rem 1rem;">
+                                <i class="fas fa-plus"></i> Nueva Empresa
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>NIT / ID</th>
+                                    <th>Email</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-empresas">
+                                <!-- Se llena dinámicamente -->
+                            </tbody>
+                        </table>
                     </div>
-                </section>
-            </main>
+                </div>
+
+                <!-- Otros módulos (placeholders) -->
+                <div id="mod-usuarios" class="module"><div class="card"><h3>Gestión de Usuarios</h3><p>Módulo en construcción...</p></div></div>
+                <div id="mod-eventos" class="module"><div class="card"><h3>Gestión de Eventos</h3><p>Módulo en construcción...</p></div></div>
+                <div id="mod-inventario" class="module"><div class="card"><h3>Inventario</h3><p>Módulo en construcción...</p></div></div>
+                <div id="mod-talento" class="module"><div class="card"><h3>Talento Humano</h3><p>Módulo en construcción...</p></div></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL NUEVA EMPRESA (AGREGADO) -->
+    <div id="modalEmpresa" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Crear Nueva Empresa</h3>
+                <button class="close-modal" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Nombre de la Empresa</label>
+                <input type="text" id="empNombre" class="form-control" placeholder="Ej: Grupo Empresarial XYZ">
+            </div>
+            <div class="form-group">
+                <label>NIT / ID Fiscal</label>
+                <input type="text" id="empNit" class="form-control" placeholder="Ej: 900.123.456-7">
+            </div>
+            <div class="form-group">
+                <label>Dirección Principal</label>
+                <input type="text" id="empDireccion" class="form-control" placeholder="Ciudad, Dirección">
+            </div>
+            <div class="form-group">
+                <label>Email Corporativo</label>
+                <input type="email" id="empEmail" class="form-control" placeholder="contacto@empresa.com">
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select id="empEstado" class="form-control">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-success" id="btnGuardarEmpresa">Guardar Empresa</button>
+            </div>
         </div>
     </div>
 
-    <!-- JavaScript Modules -->
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script>
+        // --- LÓGICA DE LA APLICACIÓN ---
+        
+        // 1. Navegación
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+                
+                const modId = item.getAttribute('data-module');
+                document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+                document.getElementById('mod-' + modId).classList.add('active');
+                
+                document.getElementById('page-title').innerText = item.innerText;
+                if(modId === 'empresas') cargarEmpresas();
+                if(modId === 'dashboard') actualizarDashboard();
+            });
+        });
+
+        // 2. Login Simulado
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            // Aquí iría la validación real contra Firebase
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('dashboard-container').style.display = 'flex';
+            actualizarDashboard();
+        });
+
+        function logout() {
+            location.reload();
+        }
+
+        // 3. Funciones de Empresas
+        async function cargarEmpresas() {
+            const tbody = document.getElementById('tabla-empresas');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Cargando...</td></tr>';
+            
+            try {
+                // Intenta fetch a la API, si falla usa datos dummy
+                const res = await fetch('/api/empresas');
+                const data = await res.json();
+                renderEmpresas(data.empresas || []);
+            } catch (error) {
+                console.warn("API no disponible, usando datos locales", error);
+                renderEmpresas([]); // O datos mock si tienes
+            }
+        }
+
+        function renderEmpresas(lista) {
+            const tbody = document.getElementById('tabla-empresas');
+            tbody.innerHTML = '';
+            if(lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8;">No hay empresas registradas</td></tr>';
+                return;
+            }
+            lista.forEach(emp => {
+                const badgeClass = emp.estado === 'Activo' ? 'badge-success' : 'badge-danger';
+                const row = `
+                    <tr>
+                        <td><strong>${emp.nombre}</strong></td>
+                        <td>${emp.nit || 'N/A'}</td>
+                        <td>${emp.email || 'N/A'}</td>
+                        <td><span class="badge ${badgeClass}">${emp.estado}</span></td>
+                        <td><button style="border:none; background:none; cursor:pointer; color:#64748b;"><i class="fas fa-ellipsis-v"></i></button></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // 4. Lógica del Modal (NUEVO)
+        const modal = document.getElementById('modalEmpresa');
+        const btnNuevo = document.getElementById('btnNuevaEmpresa');
+        const btnGuardar = document.getElementById('btnGuardarEmpresa');
+
+        if(btnNuevo) {
+            btnNuevo.addEventListener('click', () => {
+                modal.style.display = 'flex';
+            });
+        }
+
+        function cerrarModal() {
+            modal.style.display = 'none';
+            // Limpiar campos
+            document.getElementById('empNombre').value = '';
+            document.getElementById('empNit').value = '';
+            document.getElementById('empDireccion').value = '';
+            document.getElementById('empEmail').value = '';
+        }
+
+        if(btnGuardar) {
+            btnGuardar.addEventListener('click', async () => {
+                const nombre = document.getElementById('empNombre').value;
+                const nit = document.getElementById('empNit').value;
+                const direccion = document.getElementById('empDireccion').value;
+                const email = document.getElementById('empEmail').value;
+                const estado = document.getElementById('empEstado').value;
+
+                if(!nombre || !nit) {
+                    alert('⚠️ El Nombre y el NIT son obligatorios.');
+                    return;
+                }
+
+                btnGuardar.innerText = 'Guardando...';
+                btnGuardar.disabled = true;
+
+                try {
+                    const res = await fetch('/api/empresas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, nit, direccion, email, estado })
+                    });
+                    
+                    const result = await res.json();
+                    
+                    if(result.success) {
+                        alert('✅ Empresa creada exitosamente');
+                        cerrarModal();
+                        cargarEmpresas();
+                    } else {
+                        alert('❌ Error: ' + (result.error || 'Falló al guardar'));
+                    }
+                } catch (error) {
+                    alert('❌ Error de conexión: ' + error.message);
+                } finally {
+                    btnGuardar.innerText = 'Guardar Empresa';
+                    btnGuardar.disabled = false;
+                }
+            });
+        }
+
+        // 5. Dashboard Stats
+        function actualizarDashboard() {
+            // Simulación de stats
+            document.getElementById('stat-empresas').innerText = "3"; 
+            document.getElementById('stat-usuarios').innerText = "12";
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('clock').innerText = now.toLocaleTimeString();
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
