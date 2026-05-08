@@ -1,4 +1,4 @@
-	const express = require('express');
+const express = require('express');
 const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
@@ -21,11 +21,10 @@ app.get('/api/health', (req, res) => {
 
 app.get('/api/dashboard/stats', (req, res) => {
     res.json({
-        empresas: 3,
-        personal: 000,
-        eventos: 00,
+        empresas: 24,
+        personal: 3456,
+        eventos: 45,
         sync: 'OK'
-await addDoc(collection(db, "empresas"), req.body);
     });
 });
 
@@ -39,4 +38,3 @@ app.listen(PORT, () => {
     console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
     console.log(`📁 Modo: ${process.env.NODE_ENV || 'development'}`);
 });
-
